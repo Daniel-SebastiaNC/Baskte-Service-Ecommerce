@@ -56,4 +56,29 @@ public class BasketService {
     public Basket getBasketById(String id){
         return basketRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Basket not found"));
     }
+
+    public Basket updateBasket(String id, BasketRequest basketRequest) {
+        Basket basket = getBasketById(id);
+
+        List<Product> products = new ArrayList<>();
+
+        basketRequest.products().forEach(product -> {
+            PlatziProductResponse productById = productService.getProductById(product.id());
+            products.add(
+                    Product.builder()
+                            .id(productById.id())
+                            .title(productById.title())
+                            .price(productById.price())
+                            .quantity(product.quantity())
+                            .build()
+            );
+
+        });
+
+        basket.setProducts(products);
+        basket.calculateTotalPrice();
+
+        return basketRepository.save(basket);
+
+    }
 }
