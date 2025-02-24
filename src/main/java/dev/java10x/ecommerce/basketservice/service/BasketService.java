@@ -27,21 +27,7 @@ public class BasketService {
                     throw new IllegalArgumentException("There is already an open basket for this client");
                 });
 
-        List<Product> products = new ArrayList<>();
-
-
-        basketRequest.products().forEach(product -> {
-            PlatziProductResponse productById = productService.getProductById(product.id());
-            products.add(
-                    Product.builder()
-                            .id(productById.id())
-                            .title(productById.title())
-                            .price(productById.price())
-                            .quantity(product.quantity())
-                            .build()
-            );
-
-        });
+        List<Product> products = this.getProducts(basketRequest);
 
         Basket basket = Basket.builder()
                 .client(basketRequest.clientId())
@@ -61,20 +47,7 @@ public class BasketService {
     public Basket updateBasket(String id, BasketRequest basketRequest) {
         Basket basket = getBasketById(id);
 
-        List<Product> products = new ArrayList<>();
-
-        basketRequest.products().forEach(product -> {
-            PlatziProductResponse productById = productService.getProductById(product.id());
-            products.add(
-                    Product.builder()
-                            .id(productById.id())
-                            .title(productById.title())
-                            .price(productById.price())
-                            .quantity(product.quantity())
-                            .build()
-            );
-
-        });
+        List<Product> products = this.getProducts(basketRequest);
 
         basket.setProducts(products);
         basket.calculateTotalPrice();
@@ -93,5 +66,23 @@ public class BasketService {
 
     public void deleteBasket(String id) {
         basketRepository.delete(getBasketById(id));
+    }
+
+    private List<Product> getProducts(BasketRequest basketRequest) {
+        List<Product> products = new ArrayList<>();
+
+        basketRequest.products().forEach(product -> {
+            PlatziProductResponse productById = productService.getProductById(product.id());
+            products.add(
+                    Product.builder()
+                            .id(productById.id())
+                            .title(productById.title())
+                            .price(productById.price())
+                            .quantity(product.quantity())
+                            .build()
+            );
+
+        });
+        return products;
     }
 }
