@@ -1,4 +1,7 @@
 package dev.java10x.ecommerce.basketservice.exceptions;
 
-public class DataNotFoundException {
+public class DataNotFoundException extends RuntimeException{
+    public DataNotFoundException(String message) {
+        super(message);
+    }
 }

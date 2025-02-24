@@ -6,6 +6,8 @@ import dev.java10x.ecommerce.basketservice.controller.request.PaymentRequest;
 import dev.java10x.ecommerce.basketservice.entity.Basket;
 import dev.java10x.ecommerce.basketservice.entity.Product;
 import dev.java10x.ecommerce.basketservice.entity.Status;
+import dev.java10x.ecommerce.basketservice.exceptions.BusinessException;
+import dev.java10x.ecommerce.basketservice.exceptions.DataNotFoundException;
 import dev.java10x.ecommerce.basketservice.repository.BasketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class BasketService {
 
         basketRepository.findByClientAndStatus(basketRequest.clientId(), Status.OPEN)
                 .ifPresent( basket -> {
-                    throw new IllegalArgumentException("There is already an open basket for this client");
+                    throw new BusinessException("There is already an open basket for this client");
                 });
 
         List<Product> products = this.getProducts(basketRequest);
@@ -41,7 +43,7 @@ public class BasketService {
     }
 
     public Basket getBasketById(String id){
-        return basketRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Basket not found"));
+        return basketRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Basket not found"));
     }
 
     public Basket updateBasket(String id, BasketRequest basketRequest) {
