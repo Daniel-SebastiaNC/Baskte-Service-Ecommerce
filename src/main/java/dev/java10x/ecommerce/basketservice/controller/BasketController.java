@@ -1,6 +1,7 @@
 package dev.java10x.ecommerce.basketservice.controller;
 
 import dev.java10x.ecommerce.basketservice.controller.request.BasketRequest;
+import dev.java10x.ecommerce.basketservice.controller.request.PaymentRequest;
 import dev.java10x.ecommerce.basketservice.entity.Basket;
 import dev.java10x.ecommerce.basketservice.service.BasketService;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,10 @@ public class BasketController {
     @PutMapping("/{id}")
     public ResponseEntity<Basket> updateBasket(@PathVariable String id, @RequestBody BasketRequest basketRequest){
         return ResponseEntity.status(HttpStatus.OK).body(basketService.updateBasket(id, basketRequest));
+    }
+
+    @PutMapping("/{id}/payment")
+    public ResponseEntity<Basket> payBasket(@PathVariable String id, @RequestBody PaymentRequest paymentRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(basketService.payBasket(id, paymentRequest));
     }
 }
